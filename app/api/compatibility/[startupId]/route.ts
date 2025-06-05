@@ -1,11 +1,14 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 
 import { authOptions } from "../../../../lib/auth"
 import { prisma } from "../../../../lib/db"
 import { calculateTeamCompatibility } from "../../../../lib/compatibility"
 
-export async function GET(req: Request, { params }: { params: { startupId: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { startupId: string } }
+) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -13,7 +16,7 @@ export async function GET(req: Request, { params }: { params: { startupId: strin
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
-    const { startupId } = params
+    const { startupId } = context.params
 
     // Check if the user is authorized to view this startup's compatibility
     if (session.user.role !== "SUPERADMIN" && (session.user.role !== "HR" || session.user.startupId !== startupId)) {
