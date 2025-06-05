@@ -1,5 +1,12 @@
 {
   "buildCommand": "pnpm install && pnpm run build",
   "installCommand": "pnpm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "nodeVersion": "20.11.1",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ]
 } 
