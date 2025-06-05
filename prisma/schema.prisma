@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model answer {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  userId         String
+  questionId     String
+  agreementLevel Int      @default(0)
+  question       question @relation(fields: [questionId], references: [id], map: "Answer_questionId_fkey")
+  user           user     @relation(fields: [userId], references: [id], map: "Answer_userId_fkey")
+
+  @@index([questionId], map: "Answer_questionId_idx")
+  @@index([userId], map: "Answer_userId_idx")
+}
+
+model insight {
+  id        String   @id @default(cuid())
+  text      String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], map: "Insight_userId_fkey")
+
+  @@index([userId], map: "Insight_userId_idx")
+}
+
+model question {
+  id           String        @id
+  questionText String        @db.Text
+  type         question_type @default(AGREEMENT_SCALE)
+  discMapping  String        @db.LongText
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime
+  answer       answer[]
+}
+
+model result {
+  id           String              @id @default(cuid())
+  dScore       Float
+  iScore       Float
+  sScore       Float
+  cScore       Float
+  dominantType result_dominantType
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         user                @relation(fields: [userId], references: [id], map: "Result_userId_fkey")
+
+  @@index([userId], map: "Result_userId_idx")
+}
+
+model startup {
+  id          String   @id
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  createdById String
+  user        user[]
+}
+
+model user {
+  id          String    @id
+  name        String
+  email       String    @unique(map: "User_email_key")
+  password    String
+  role        user_role @default(REGULAR_USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  startupId   String?
+  invitedById String?
+  answer      answer[]
+  insight     insight[]
+  result      result[]
+  user        user?     @relation("userTouser", fields: [invitedById], references: [id], map: "User_invitedById_fkey")
+  other_user  user[]    @relation("userTouser")
+  startup     startup?  @relation(fields: [startupId], references: [id], map: "User_startupId_fkey")
+
+  @@index([invitedById], map: "User_invitedById_fkey")
+  @@index([startupId], map: "User_startupId_idx")
+}
+
+enum question_type {
+  AGREEMENT_SCALE
+  MULTIPLE_CHOICE
+}
+
+enum user_role {
+  SUPERADMIN
+  HR
+  EMPLOYEE
+  REGULAR_USER
+}
+
+enum result_dominantType {
+  D
+  I
+  S
+  C
+}
