@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role,
+          role: user.role as unknown as UserRole,
           startupId: user.startupId,
         }
       },
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.name = token.name as string
         session.user.email = token.email as string
-        session.user.role = token.role as string
+        session.user.role = token.role as UserRole | undefined
         session.user.startupId = token.startupId as string | null
       }
       return session

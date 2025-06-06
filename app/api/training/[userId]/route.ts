@@ -5,7 +5,8 @@ import { authOptions } from "../../../../lib/auth"
 import { prisma } from "../../../../lib/db"
 import { generateTrainingPlan, generateCommunicationTips } from "../../../../lib/huggingface"
 
-export async function GET(req: Request, { params }: { params: { userId: string } }) {
+export async function GET(req: Request, context: { params: Promise<{ userId: string }> }) {
+  const params = await context.params
   try {
     const session = await getServerSession(authOptions)
 

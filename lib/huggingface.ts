@@ -102,7 +102,7 @@ export async function generateTrainingPlan(discResult: DiscResult): Promise<stri
 
     if (!data.generated_text) {
       console.error("[HF API Error] No generated text in response")
-      return getFallbackTrainingPlan(discResult.dominantType)
+      return getFallbackTrainingPlan(castToDiscType(discResult.dominantType))
     }
 
     // Process the generated text to extract recommendations
@@ -110,10 +110,10 @@ export async function generateTrainingPlan(discResult: DiscResult): Promise<stri
     const recommendations = processTrainingRecommendations(data.generated_text)
     console.log(`[Processing] Extracted ${recommendations.length} training recommendations`)
 
-    return recommendations.length > 0 ? recommendations : getFallbackTrainingPlan(discResult.dominantType)
+    return recommendations.length > 0 ? recommendations : getFallbackTrainingPlan(castToDiscType(discResult.dominantType))
   } catch (error) {
     console.error("[HF API Error]", error)
-    return getFallbackTrainingPlan(discResult.dominantType)
+    return getFallbackTrainingPlan(castToDiscType(discResult.dominantType))
   }
 }
 
@@ -161,7 +161,7 @@ export async function generateCommunicationTips(discResult: DiscResult): Promise
 
     if (!data.generated_text) {
       console.error("[HF API Error] No generated text in response")
-      return getFallbackCommunicationTips(discResult.dominantType)
+      return getFallbackCommunicationTips(castToDiscType(discResult.dominantType))
     }
 
     // Process the generated text to extract communication tips
@@ -169,10 +169,10 @@ export async function generateCommunicationTips(discResult: DiscResult): Promise
     const tips = processCommunicationTips(data.generated_text)
     console.log(`[Processing] Extracted ${tips.length} communication tips`)
 
-    return tips.length > 0 ? tips : getFallbackCommunicationTips(discResult.dominantType)
+    return tips.length > 0 ? tips : getFallbackCommunicationTips(castToDiscType(discResult.dominantType))
   } catch (error) {
     console.error("[HF API Error]", error)
-    return getFallbackCommunicationTips(discResult.dominantType)
+    return getFallbackCommunicationTips(castToDiscType(discResult.dominantType))
   }
 }
 
@@ -363,6 +363,21 @@ To be most effective, use your analytical strengths while developing more comfor
 
 type DiscType = "D" | "I" | "S" | "C"
 
+function castToDiscType(value: string): DiscType {
+  if (value === "D" || value === "I" || value === "S" || value === "C") {
+    return value
+  }
+  throw new Error(`Invalid DiscType value: ${value}`)
+}
+
+// Update all function calls passing string as DiscType to use castToDiscType
+
+// Example fix for getFallbackTrainingPlan and getFallbackCommunicationTips calls:
+// return getFallbackTrainingPlan(castToDiscType(discResult.dominantType))
+// return getFallbackCommunicationTips(castToDiscType(discResult.dominantType))
+
+// Similarly, update other calls passing string to DiscType parameters accordingly
+
 function getFallbackTrainingPlan(dominantType: DiscType): string[] {
   const recommendations: Record<DiscType, string[]> = {
     D: [
@@ -437,7 +452,7 @@ function getFallbackCommunicationTips(dominantType: DiscType): string[] {
     ],
   }
 
-  return tips[dominantType] || [
+    return tips[castToDiscType(dominantType)] || [
     "Practice active listening and confirm understanding",
     "Be clear and specific about expectations and deadlines",
     "Choose appropriate communication channels based on message complexity",

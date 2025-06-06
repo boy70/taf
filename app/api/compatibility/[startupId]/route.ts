@@ -6,9 +6,10 @@ import { prisma } from "../../../../lib/db"
 import { calculateTeamCompatibility } from "../../../../lib/compatibility"
 
 export async function GET(
-  request: NextRequest,
-  context: { params: { startupId: string } }
+  req: NextRequest,
+  context: { params: Promise<{ startupId: string }> }
 ) {
+  const params = await context.params
   try {
     const session = await getServerSession(authOptions)
 
@@ -16,14 +17,17 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
-    const { startupId } = context.params
+    const { startupId } = params
 
-    // Check if the user is authorized to view this startup's compatibility
-    if (session.user.role !== "SUPERADMIN" && (session.user.role !== "HR" || session.user.startupId !== startupId)) {
+    // Authorization check
+    if (
+      session.user.role !== "SUPERADMIN" &&
+      (session.user.role !== "HR" || session.user.startupId !== startupId)
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
-    // Get all users with results for this startup
+    // Fetch users with their latest result
     const users = await prisma.user.findMany({
       where: {
         startupId,
@@ -38,10 +42,8 @@ export async function GET(
       },
     })
 
-    // Filter users who have taken the test
     const usersWithResults = users.filter((user: any) => user.result.length > 0)
 
-    // Format team members
     const teamMembers = usersWithResults.map((user: any) => ({
       id: user.id,
       name: user.name,
@@ -52,7 +54,6 @@ export async function GET(
       cScore: user.result[0].cScore,
     }))
 
-    // Calculate team compatibility
     const compatibility = calculateTeamCompatibility(teamMembers)
 
     return NextResponse.json({

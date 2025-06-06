@@ -1,11 +1,8 @@
-import type { user_role, result_dominantType } from "@prisma/client"
-
-// Auth types
 export interface UserSession {
   id: string
   name: string
   email: string
-  role: user_role
+  role: string
   startupId: string | null
 }
 
@@ -41,14 +38,14 @@ export interface DiscResult {
   iScore: number
   sScore: number
   cScore: number
-  dominantType: result_dominantType
+  dominantType: string
 }
 
 // Team compatibility types
 export interface TeamMember {
   id: string
   name: string
-  dominantType: result_dominantType
+  dominantType: string
   dScore: number
   iScore: number
   sScore: number
@@ -74,6 +71,6 @@ export interface EmployeeData {
   id: string
   name: string
   email: string
-  dominantType: result_dominantType | null
+  dominantType: string | null
   testCompleted: boolean
 }

@@ -9,12 +9,13 @@ import { Loader2, ArrowLeft, User, BarChart2, BookOpen } from "lucide-react"
 import { TrainingRecommendations } from "../../../../../components/training-recommendations"
 
 interface EmployeeDetailsProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
+export default async function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
+  const resolvedParams = await params
   const router = useRouter()
   const [employee, setEmployee] = useState<any>(null)
   const [result, setResult] = useState<any>(null)
@@ -28,7 +29,7 @@ export default function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
         setLoading(true)
 
         // Fetch employee data
-        const employeeResponse = await fetch(`/api/users?userId=${params.id}`)
+        const employeeResponse = await fetch(`/api/users?userId=${(await params).id}`)
         if (!employeeResponse.ok) {
           throw new Error("Failed to fetch employee data")
         }
@@ -41,7 +42,7 @@ export default function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
         setEmployee(employeeData[0])
 
         // Fetch results data
-        const resultsResponse = await fetch(`/api/results/${params.id}`)
+        const resultsResponse = await fetch(`/api/results/${(await params).id}`)
         if (!resultsResponse.ok) {
           throw new Error("Failed to fetch results data")
         }
@@ -58,7 +59,7 @@ export default function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
     }
 
     fetchEmployeeData()
-  }, [params.id])
+  }, [(await params).id])
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -222,13 +223,13 @@ export default function EmployeeDetailsPage({ params }: EmployeeDetailsProps) {
               </Card>
             </TabsContent>
 
-            <TabsContent value="recommendations" className="mt-6">
-              <TrainingRecommendations
-                userId={params.id}
-                userName={employee?.name || "Employee"}
-                dominantType={result.dominantType}
-              />
-            </TabsContent>
+        <TabsContent value="recommendations" className="mt-6">
+          <TrainingRecommendations
+            userId={resolvedParams.id}
+            userName={employee?.name || "Employee"}
+            dominantType={result.dominantType}
+          />
+        </TabsContent>
           </Tabs>
         ) : (
           <Card>

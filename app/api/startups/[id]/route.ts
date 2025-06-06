@@ -7,7 +7,8 @@ interface Params {
   id: string
 }
 
-export async function GET(req: Request, { params }: { params: Params }) {
+export async function GET(req: Request, context: { params: Promise<Params> }) {
+  const params = await context.params
   try {
     const session = await getServerSession(authOptions)
 
