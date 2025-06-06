@@ -1,2 +1,7 @@
 ignoredBuiltDependencies:
+  - '@prisma/engines'
+  - chromium
+  - prisma
   - sharp
+onlyBuiltDependencies:
+  - '@prisma/client'
