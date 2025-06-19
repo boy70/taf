@@ -64,7 +64,8 @@ const config = {
   			}
   		},
   		borderColor: {
-  			border: 'hsl(var(--border))',
+  			DEFAULT: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
