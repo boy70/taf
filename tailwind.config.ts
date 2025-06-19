@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
-    darkMode: ["class"],
-    content: [
+const config = {
+    darkMode: "class",
+    content:
+	 [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -62,6 +63,9 @@ const config: Config = {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
+  		borderColor: {
+  			border: 'hsl(var(--border))',
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -92,5 +96,6 @@ const config: Config = {
   	}
   },
   plugins: [require("tailwindcss-animate")],
-};
+} satisfies Config;
+
 export default config;
