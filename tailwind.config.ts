@@ -63,6 +63,9 @@ const config = {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
+  		border: {
+  			DEFAULT: 'hsl(var(--border))'
+  		},
   		borderColor: {
   			DEFAULT: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
