@@ -1,8 +1,0 @@
-ignoredBuiltDependencies:
-  - '@prisma/engines'
-  - '@tailwindcss/oxide'
-  - chromium
-  - prisma
-  - sharp
-onlyBuiltDependencies:
-  - '@prisma/client'
