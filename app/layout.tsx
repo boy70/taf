@@ -3,7 +3,9 @@
 import React from "react"
 import "./globals.css"
 import { SessionProvider } from "next-auth/react"
-import { ThemeProvider } from "next-themes"
+import { ThemeProvider } from "@/components/theme-provider"
+
+// NOTE: Only import global styles from app/globals.css. Do NOT use styles/globals.css to avoid conflicts.
 
 export default function RootLayout({
   children,
@@ -12,14 +14,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-[hsl(var(--background))] font-sans antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >
-          <SessionProvider>{children}</SessionProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <main className="flex-1">
+              <div className="container relative">
+                <SessionProvider>{children}</SessionProvider>
+              </div>
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>

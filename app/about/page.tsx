@@ -5,8 +5,8 @@ import { motion } from "framer-motion"
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="min-h-screen bg-[hsl(var(--background))] text-foreground">
+      <header className="sticky top-0 z-10 border-b bg-[hsl(var(--background))]/95 backdrop-blur supports-[backdrop-filter]:bg-[hsl(var(--background))]/60">
         <div className="container flex h-14 items-center">
           <h1 className="text-2xl font-bold">About Tafsula</h1>
         </div>

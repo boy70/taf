@@ -7,8 +7,64 @@ import { Card } from "../components/ui/card"
 import { ArrowRight, Sparkles, Brain, Zap, Heart, CheckCircle, Users, TrendingUp } from "lucide-react"
 import { UserNav } from "components/user-nav"
 
+// Predefined blob positions and sizes
+const blobConfigs = [
+  { width: "32.387%", height: "20.167%", top: "59.855%", left: "55.574%" },
+  { width: "26.827%", height: "15.918%", top: "75.037%", left: "14.112%" },
+  { width: "37.978%", height: "24.928%", top: "79.683%", left: "48.003%" },
+  { width: "36.897%", height: "23.540%", top: "36.119%", left: "50.640%" }
+]
+
+const colorCards = [
+  {
+    color: "#e53e3e",
+    title: "Red Energy",
+    icon: Zap,
+    description: "Bold, direct, and results-driven. Reds are natural leaders who focus on the big picture, take risks, and embrace challenges. They value results, action, and efficiency.",
+    strengths: [
+      "Taking initiative and driving projects forward",
+      "Making tough decisions under pressure",
+      "Leading teams through challenges",
+    ],
+  },
+  {
+    color: "#ecc94b",
+    title: "Yellow Joy",
+    icon: Sparkles,
+    description: "Enthusiastic, creative, and social. Yellows are optimistic communicators who value social recognition, group activities, and relationships. They bring energy and optimism to teams.",
+    strengths: [
+      "Building relationships and networks",
+      "Generating innovative ideas",
+      "Motivating and inspiring others",
+    ],
+  },
+  {
+    color: "#48bb78",
+    title: "Green Growth",
+    icon: Heart,
+    description: "Patient, loyal, and relationship-focused. Greens are team players who create harmony and stability. They listen deeply and offer consistent support.",
+    strengths: [
+      "Creating harmony and reducing conflict",
+      "Building stable, trusting relationships",
+      "Supporting team members",
+    ],
+  },
+  {
+    color: "#3182ce",
+    title: "Blue Depth",
+    icon: Brain,
+    description: "Precise, logical, and detail-oriented. Blues are methodical thinkers who value accuracy and quality. They excel at solving complex problems.",
+    strengths: [
+      "Analyzing complex problems",
+      "Ensuring quality and accuracy",
+      "Creating systematic processes"
+    ],
+  }
+]
+
 export default function Home() {
   return (
+    
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-white via-slate-50 to-slate-100">
       {/* Header with UserNav */}
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -31,7 +87,7 @@ export default function Home() {
               <p className="text-xs text-gray-500 -mt-1">Team Compatibility Analysis</p>
             </motion.div>
           </div>
-
+         
           <nav className="hidden md:flex items-center space-x-1">
             <Link href="/about">
               <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
@@ -65,10 +121,10 @@ export default function Home() {
                 className="absolute rounded-full blur-3xl opacity-5"
                 style={{
                   backgroundColor: card.color,
-                  width: `${Math.random() * 25 + 15}%`,
-                  height: `${Math.random() * 25 + 15}%`,
-                  top: `${Math.random() * 80}%`,
-                  left: `${Math.random() * 80}%`,
+                  width: blobConfigs[index].width,
+                  height: blobConfigs[index].height,
+                  top: blobConfigs[index].top,
+                  left: blobConfigs[index].left
                 }}
                 animate={{
                   x: [0, 20, 0, -20, 0],
@@ -378,53 +434,6 @@ export default function Home() {
     </div>
   )
 }
-
-const colorCards = [
-  {
-    title: "Red - Dynamic",
-    description:
-      "Bold, direct, and results-driven. Reds are natural leaders who focus on the big picture, take risks, and embrace challenges. They value results, action, and efficiency.",
-    icon: Zap,
-    color: "#e53e3e",
-    strengths: [
-      "Taking initiative and driving projects forward",
-      "Making tough decisions under pressure",
-      "Leading teams through challenges",
-    ],
-  },
-  {
-    title: "Yellow - Inspiring",
-    description:
-      "Enthusiastic, creative, and social. Yellows are optimistic communicators who value social recognition, group activities, and relationships. They bring energy and optimism to teams.",
-    icon: Sparkles,
-    color: "#ecc94b",
-    strengths: [
-      "Building relationships and networks",
-      "Generating innovative ideas",
-      "Motivating and inspiring others",
-    ],
-  },
-  {
-    title: "Green - Supportive",
-    description:
-      "Patient, loyal, and relationship-focused. Greens are team players who create harmony and stability. They listen deeply and offer consistent support.",
-    icon: Heart,
-    color: "#48bb78",
-    strengths: [
-      "Creating harmony and reducing conflict",
-      "Building stable, trusting relationships",
-      "Supporting team members",
-    ],
-  },
-  {
-    title: "Blue - Analytical",
-    description:
-      "Precise, logical, and detail-oriented. Blues are methodical thinkers who value accuracy and quality. They excel at solving complex problems.",
-    icon: Brain,
-    color: "#3182ce",
-    strengths: ["Analyzing complex problems", "Ensuring quality and accuracy", "Creating systematic processes"],
-  },
-]
 
 const features = [
   {
