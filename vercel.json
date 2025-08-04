@@ -1,11 +1,13 @@
 {
-  "buildCommand": "prisma generate && pnpm install && pnpm run build",
-  "installCommand": "pnpm install",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
     }
-  ]
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
 } 
