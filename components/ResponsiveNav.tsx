@@ -2,7 +2,9 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useSession, signIn } from "next-auth/react"
+import { useSignOut } from "../hooks/useSignOut"
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -14,8 +16,20 @@ const navLinks = [
 export default function ResponsiveNav() {
   const { data: session, status } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
+  const { signOut, isSigningOut } = useSignOut()
+  const router = useRouter()
 
   const toggleMenu = () => setMenuOpen(!menuOpen)
+
+  const handleSignOut = async () => {
+    await signOut()
+    setMenuOpen(false)
+  }
+
+  const handleSignIn = () => {
+    router.push("/auth/login")
+    setMenuOpen(false)
+  }
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50">
@@ -37,17 +51,16 @@ export default function ResponsiveNav() {
               </a>
             ))}
             {status === "loading" ? null : session ? (
-              <>
-                <button
-                  onClick={() => signOut()}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+              >
+                {isSigningOut ? "Signing out..." : "Logout"}
+              </button>
             ) : (
               <button
-                onClick={() => signIn()}
+                onClick={handleSignIn}
                 className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Login
@@ -106,20 +119,15 @@ export default function ResponsiveNav() {
             ))}
             {status === "loading" ? null : session ? (
               <button
-                onClick={() => {
-                  signOut()
-                  setMenuOpen(false)
-                }}
-                className="block w-full text-left text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="block w-full text-left text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium disabled:opacity-50"
               >
-                Logout
+                {isSigningOut ? "Signing out..." : "Logout"}
               </button>
             ) : (
               <button
-                onClick={() => {
-                  signIn()
-                  setMenuOpen(false)
-                }}
+                onClick={handleSignIn}
                 className="block w-full text-left text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
               >
                 Login

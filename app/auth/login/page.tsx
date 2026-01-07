@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 
@@ -13,35 +13,55 @@ import { Label } from "../../../components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Alert, AlertDescription } from "../../../components/ui/alert"
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    // Check for success messages from URL params
+    const message = searchParams.get("message")
+    if (message === "logged-out") {
+      setSuccess("You have been successfully signed out.")
+    } else if (message === "registered") {
+      setSuccess("Registration successful! Please sign in with your new account.")
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
+    setSuccess(null)
 
     try {
+      console.log("🔐 Login attempt for:", email)
+      
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
       })
 
+      console.log("📡 Login result:", result)
+
       if (result?.error) {
+        console.error("❌ Login failed:", result.error)
         setError("Invalid email or password")
         setIsLoading(false)
         return
       }
 
+      console.log("✅ Login successful, redirecting to dashboard")
       router.push("/dashboard")
       router.refresh()
     } catch (error) {
-      setError("An unexpected error occurred")
+      console.error("❌ Login error:", error)
+      setError("Network error. Please check your connection and try again.")
       setIsLoading(false)
     }
   }
@@ -58,6 +78,11 @@ export default function LoginPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            {success && (
+              <Alert>
+                <AlertDescription>{success}</AlertDescription>
               </Alert>
             )}
             <div className="space-y-2">
@@ -104,5 +129,20 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

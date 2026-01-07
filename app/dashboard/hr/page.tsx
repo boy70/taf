@@ -1,9 +1,11 @@
 import type React from "react"
+import { HRInviteEmployee } from "../../../components/hr-invite-employee"
 import { getServerSession } from "next-auth/next"
 import Link from "next/link"
 import { UserRole } from "../../../types/user"
 
-import { authOptions } from "../../../.../../lib/auth"
+import { authOptions } from "../../../lib/auth"
+import { prisma } from "../../../lib/db"
 import { DashboardLayout } from "../../../components/layout/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Button } from "../../../components/ui/button"
@@ -11,63 +13,40 @@ import { Button } from "../../../components/ui/button"
 export default async function HRDashboardPage() {
   const session = await getServerSession(authOptions)
 
+
   if (!session) {
-    return null
+    return <div className="p-8 text-center text-red-500">Not authenticated</div>
   }
-
   if (session.user.role !== UserRole.HR) {
-    return null
+    return <div className="p-8 text-center text-red-500">Not authorized</div>
+  }
+  if (!session.user.startupId) {
+    return <div className="p-8 text-center text-red-500">No startup assigned to your HR user. Please contact admin.</div>
   }
 
-  // Get startup info
-  const startup = await prisma.startup.findUnique({
-    where: {
-      id: session.user.startupId,
-    },
-  })
 
-  // Get employee counts
-  const employeeCount = await prisma.user.count({
-    where: {
-      startupId: session.user.startupId,
-      role: "EMPLOYEE",
-    },
-  })
-
-  // Get test completion count
-  const testCompletionCount = await prisma.user.count({
-    where: {
-      startupId: session.user.startupId,
-      role: "EMPLOYEE",
-      result: {
-        some: {},
-      },
-    },
-  })
-
-  // Get DISC type distribution
-  const discDistribution = await prisma.user.findMany({
-    where: {
-      startupId: session.user.startupId,
-      role: "EMPLOYEE",
-      result: {
-        some: {},
-      },
-    },
-    include: {
-      result: {
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 1,
-      },
-    },
-  })
-
-  const dCount = discDistribution.filter((user: any) => user.results[0]?.dominantType === "D").length
-  const iCount = discDistribution.filter((user: any) => user.results[0]?.dominantType === "I").length
-  const sCount = discDistribution.filter((user: any) => user.results[0]?.dominantType === "S").length
-  const cCount = discDistribution.filter((user: any) => user.results[0]?.dominantType === "C").length
+  let startup = null, employeeCount = 0, testCompletionCount = 0, discDistribution = [], dCount = 0, iCount = 0, sCount = 0, cCount = 0
+  try {
+    startup = await prisma.startup.findUnique({
+      where: { id: session.user.startupId },
+    })
+    employeeCount = await prisma.user.count({
+      where: { startupId: session.user.startupId, role: "EMPLOYEE" },
+    })
+    testCompletionCount = await prisma.user.count({
+      where: { startupId: session.user.startupId, role: "EMPLOYEE", result: { some: {} } },
+    })
+    discDistribution = await prisma.user.findMany({
+      where: { startupId: session.user.startupId, role: "EMPLOYEE", result: { some: {} } },
+      include: { result: { orderBy: { createdAt: "desc" }, take: 1 } },
+    })
+    dCount = discDistribution.filter((user: any) => user.result[0]?.dominantType === "D").length
+    iCount = discDistribution.filter((user: any) => user.result[0]?.dominantType === "I").length
+    sCount = discDistribution.filter((user: any) => user.result[0]?.dominantType === "S").length
+    cCount = discDistribution.filter((user: any) => user.result[0]?.dominantType === "C").length
+  } catch (err: any) {
+    return <div className="p-8 text-center text-red-500">Error loading dashboard: {err.message || String(err)}</div>
+  }
 
   return (
     <DashboardLayout role={session.user.role as UserRole}>
@@ -77,9 +56,7 @@ export default async function HRDashboardPage() {
             <h1 className="text-3xl font-bold">{startup?.name} Dashboard</h1>
             <p className="text-muted-foreground">HR Manager View</p>
           </div>
-          <Button asChild>
-            <Link href="/dashboard/hr/employees/invite">Invite Employee</Link>
-          </Button>
+          <HRInviteEmployee />
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">

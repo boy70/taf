@@ -30,54 +30,100 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
-        }
+        try {
+          console.log("🔐 Auth attempt for email:", credentials?.email)
+          
+          if (!credentials?.email || !credentials?.password) {
+            console.log("❌ Missing credentials")
+            return null
+          }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        })
+          // Test database connection
+          try {
+            await prisma.$connect()
+            console.log("✅ Database connection successful")
+          } catch (dbError) {
+            console.error("❌ Database connection failed:", dbError)
+            throw new Error("Database connection failed")
+          }
 
-        if (!user) {
-          return null
-        }
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email,
+            },
+          })
 
-        const isPasswordValid = await compare(credentials.password, user.password)
+          if (!user) {
+            console.log("❌ User not found:", credentials.email)
+            return null
+          }
 
-        if (!isPasswordValid) {
-          return null
-        }
+          console.log("✅ User found:", user.email)
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role as unknown as UserRole,
-          startupId: user.startupId,
+          const isPasswordValid = await compare(credentials.password, user.password)
+
+          if (!isPasswordValid) {
+            console.log("❌ Invalid password for user:", credentials.email)
+            return null
+          }
+
+          console.log("✅ Authentication successful for:", user.email)
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role as unknown as UserRole,
+            startupId: user.startupId,
+          }
+        } catch (error) {
+          console.error("❌ Auth error:", error)
+          throw error
         }
       },
     }),
   ],
   callbacks: {
     async session({ token, session }) {
-      if (token) {
-        session.user.id = token.id as string
-        session.user.name = token.name as string
-        session.user.email = token.email as string
-        session.user.role = token.role as UserRole | undefined
-        session.user.startupId = token.startupId as string | null
+      try {
+        if (token) {
+          session.user.id = token.id as string
+          session.user.name = token.name as string
+          session.user.email = token.email as string
+          session.user.role = token.role as UserRole | undefined
+          session.user.startupId = token.startupId as string | null
+        }
+        return session
+      } catch (error) {
+        console.error("❌ Session callback error:", error)
+        throw error
       }
-      return session
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        token.role = user.role
-        token.startupId = user.startupId
+      try {
+        if (user) {
+          token.id = user.id
+          token.role = user.role
+          token.startupId = user.startupId
+        }
+        return token
+      } catch (error) {
+        console.error("❌ JWT callback error:", error)
+        throw error
       }
-      return token
     },
   },
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      console.log("✅ Sign in successful:", { user: user.email, isNewUser })
+    },
+    async signOut({ session, token }) {
+      console.log("✅ Sign out successful")
+    },
+    async createUser({ user }) {
+      console.log("✅ User created:", user.email)
+    },
+  },
+  debug: process.env.NODE_ENV === "development",
 }
+

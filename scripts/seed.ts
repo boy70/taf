@@ -16,69 +16,93 @@ async function main() {
       id: uuidv4(),
       name: "Admin User",
       email: "admin@tafsula.com",
-      password: adminPassword,
-      role: "SUPERADMIN",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+  // Balanced DISC questions: 5 for each type
+  const questions = [
+    // D
+    {
+      questionText: "I enjoy taking charge of situations, even if it means making tough decisions.",
+      discMapping: { "1": { d: 1 }, "2": { d: 0.75 }, "3": { d: 0.5 }, "4": { d: 0.25 }, "5": { d: 0 } },
     },
-  });
-
-  console.log(`Created admin user: ${admin.email}`);
-
-  // Create sample startup
-  const startup = await prisma.startup.upsert({
-    where: { id: "clq1234567890" },
-    update: {},
-    create: {
-      id: "clq1234567890",
-      name: "Sample Startup",
-      createdById: admin.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    {
+      questionText: "When faced with obstacles, I focus on solutions rather than emotions.",
+      discMapping: { "1": { d: 1 }, "2": { d: 0.75 }, "3": { d: 0.5 }, "4": { d: 0.25 }, "5": { d: 0 } },
     },
-  });
-
-  console.log(`Created startup: ${startup.name}`);
-
-  // Create HR user
-  const hrPassword = await hash("hr123", 10);
-  const hr = await prisma.user.upsert({
-    where: { email: "hr@samplestartup.com" },
-    update: {},
-    create: {
-      id: uuidv4(),
-      name: "HR Manager",
-      email: "hr@samplestartup.com",
-      password: hrPassword,
-      role: "HR",
-      startupId: startup.id,
-      invitedById: admin.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    {
+      questionText: "I often push for results, even if it means stepping on some toes.",
+      discMapping: { "1": { d: 1 }, "2": { d: 0.75 }, "3": { d: 0.5 }, "4": { d: 0.25 }, "5": { d: 0 } },
     },
-  });
-
-  console.log(`Created HR user: ${hr.email}`);
-
-  // Create employee users
-  const employeePassword = await hash("employee123", 10);
-  const employee1 = await prisma.user.upsert({
-    where: { email: "john@samplestartup.com" },
-    update: {},
-    create: {
-      id: uuidv4(),
-      name: "John Doe",
-      email: "john@samplestartup.com",
-      password: employeePassword,
-      role: "EMPLOYEE",
-      startupId: startup.id,
-      invitedById: hr.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    {
+      questionText: "I’m comfortable in competitive or high-pressure environments.",
+      discMapping: { "1": { d: 1 }, "2": { d: 0.75 }, "3": { d: 0.5 }, "4": { d: 0.25 }, "5": { d: 0 } },
     },
-  });
-
-  const employee2 = await prisma.user.upsert({
+    {
+      questionText: "I like to take initiative and make decisions quickly.",
+      discMapping: { "1": { d: 1 }, "2": { d: 0.75 }, "3": { d: 0.5 }, "4": { d: 0.25 }, "5": { d: 0 } },
+    },
+    // I
+    {
+      questionText: "I enjoy being the center of attention in group settings.",
+      discMapping: { "1": { i: 1 }, "2": { i: 0.75 }, "3": { i: 0.5 }, "4": { i: 0.25 }, "5": { i: 0 } },
+    },
+    {
+      questionText: "I often inspire others with my enthusiasm and ideas.",
+      discMapping: { "1": { i: 1 }, "2": { i: 0.75 }, "3": { i: 0.5 }, "4": { i: 0.25 }, "5": { i: 0 } },
+    },
+    {
+      questionText: "I like to build relationships and connect with new people.",
+      discMapping: { "1": { i: 1 }, "2": { i: 0.75 }, "3": { i: 0.5 }, "4": { i: 0.25 }, "5": { i: 0 } },
+    },
+    {
+      questionText: "I am enthusiastic and optimistic in most situations.",
+      discMapping: { "1": { i: 1 }, "2": { i: 0.75 }, "3": { i: 0.5 }, "4": { i: 0.25 }, "5": { i: 0 } },
+    },
+    {
+      questionText: "I enjoy motivating others to achieve their goals.",
+      discMapping: { "1": { i: 1 }, "2": { i: 0.75 }, "3": { i: 0.5 }, "4": { i: 0.25 }, "5": { i: 0 } },
+    },
+    // S
+    {
+      questionText: "I value harmony and try to avoid conflict.",
+      discMapping: { "1": { s: 1 }, "2": { s: 0.75 }, "3": { s: 0.5 }, "4": { s: 0.25 }, "5": { s: 0 } },
+    },
+    {
+      questionText: "I am patient and a good listener.",
+      discMapping: { "1": { s: 1 }, "2": { s: 0.75 }, "3": { s: 0.5 }, "4": { s: 0.25 }, "5": { s: 0 } },
+    },
+    {
+      questionText: "I am loyal and dependable in relationships.",
+      discMapping: { "1": { s: 1 }, "2": { s: 0.75 }, "3": { s: 0.5 }, "4": { s: 0.25 }, "5": { s: 0 } },
+    },
+    {
+      questionText: "I prefer stability and routine over change.",
+      discMapping: { "1": { s: 1 }, "2": { s: 0.75 }, "3": { s: 0.5 }, "4": { s: 0.25 }, "5": { s: 0 } },
+    },
+    {
+      questionText: "I am supportive and helpful to others.",
+      discMapping: { "1": { s: 1 }, "2": { s: 0.75 }, "3": { s: 0.5 }, "4": { s: 0.25 }, "5": { s: 0 } },
+    },
+    // C
+    {
+      questionText: "I pay attention to details and strive for accuracy.",
+      discMapping: { "1": { c: 1 }, "2": { c: 0.75 }, "3": { c: 0.5 }, "4": { c: 0.25 }, "5": { c: 0 } },
+    },
+    {
+      questionText: "I like to analyze problems before making decisions.",
+      discMapping: { "1": { c: 1 }, "2": { c: 0.75 }, "3": { c: 0.5 }, "4": { c: 0.25 }, "5": { c: 0 } },
+    },
+    {
+      questionText: "I follow rules and procedures closely.",
+      discMapping: { "1": { c: 1 }, "2": { c: 0.75 }, "3": { c: 0.5 }, "4": { c: 0.25 }, "5": { c: 0 } },
+    },
+    {
+      questionText: "I am cautious and think before acting.",
+      discMapping: { "1": { c: 1 }, "2": { c: 0.75 }, "3": { c: 0.5 }, "4": { c: 0.25 }, "5": { c: 0 } },
+    },
+    {
+      questionText: "I strive for high standards in my work.",
+      discMapping: { "1": { c: 1 }, "2": { c: 0.75 }, "3": { c: 0.5 }, "4": { c: 0.25 }, "5": { c: 0 } },
+    },
+  ]
     where: { email: "jane@samplestartup.com" },
     update: {},
     create: {

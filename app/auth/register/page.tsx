@@ -34,31 +34,40 @@ export default function RegisterPage() {
     }
 
     try {
+      console.log("🚀 Attempting registration for:", email)
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        role: "REGULAR_USER", // Default role for self-registration changed to REGULAR_USER
-      }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role: "REGULAR_USER",
+        }),
       })
-
-      const data = await response.json()
-
+      let data = null
+      try {
+        data = await response.json()
+      } catch (jsonErr) {
+        // If response is not JSON, fallback
+        data = { error: "Registration failed. (Invalid server response)" }
+      }
+      console.log("📡 Registration response:", { status: response.status, data })
       if (!response.ok) {
-        setError(data.error || "Registration failed")
+        const errorMessage = data.error || `Registration failed. [${response.status}]`
+        setError(errorMessage)
         setIsLoading(false)
         return
       }
-
-      // Redirect to login page on successful registration
       router.push("/auth/login?registered=true")
     } catch (error) {
-      setError("An unexpected error occurred")
+      setError(
+        process.env.NODE_ENV === "development"
+          ? (error instanceof Error ? error.message : String(error))
+          : "Network error. Please check your connection and try again."
+      )
       setIsLoading(false)
     }
   }
