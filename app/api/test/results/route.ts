@@ -9,42 +9,11 @@ export async function GET(req: NextRequest) {
   try {
     // Use getToken to retrieve session token without req/res
     const token = await getToken({ req, secret })
-    let userId: string | null = null
-
-    if (token) {
-      const user = await prisma.user.findUnique({ where: { id: token.sub } })
-      if (user) {
-        userId = user.id
-      }
+    if (!token?.sub) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
-    // If no user is found, try to get the most recent result
-    if (!userId) {
-      const latestResult = await prisma.result.findFirst({
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-
-      if (!latestResult) {
-        return NextResponse.json({ error: "No results found" }, { status: 404 })
-      }
-
-      // Get the insight separately
-      const insight = await prisma.insight.findFirst({
-        where: {
-          userId: latestResult.userId
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-
-      return NextResponse.json({
-        result: latestResult,
-        insight
-      })
-    }
+    const userId = token.sub
 
     // Get the user's most recent result
     const result = await prisma.result.findFirst({

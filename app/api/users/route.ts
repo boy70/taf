@@ -49,7 +49,13 @@ export async function GET(req: Request) {
         },
       })
 
-      return NextResponse.json(users)
+      // Transform results to match expected format
+      return NextResponse.json(
+        users.map((user: any) => ({
+          ...user,
+          results: user.result,
+        })),
+      )
     }
 
     // HR can only see users in their startup
@@ -69,7 +75,13 @@ export async function GET(req: Request) {
         },
       })
 
-      return NextResponse.json(users)
+      // Transform results to match expected format
+      return NextResponse.json(
+        users.map((user: any) => ({
+          ...user,
+          results: user.result,
+        })),
+      )
     }
 
     // Employees can only see themselves
@@ -88,7 +100,12 @@ export async function GET(req: Request) {
         },
       })
 
-      return NextResponse.json([user])
+      return NextResponse.json([
+        {
+          ...user,
+          results: user?.result,
+        },
+      ])
     }
 
     return NextResponse.json([])

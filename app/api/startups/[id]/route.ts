@@ -10,16 +10,20 @@ interface Params {
 export async function GET(req: Request, context: { params: Promise<Params> }) {
   const params = await context.params
   try {
-    const session = await getServerSession(authOptions)
-
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
-    }
-
     const { id } = params
 
     const startup = await prisma.startup.findUnique({
       where: { id },
+      include: {
+        startupProfile: true,
+        _count: {
+          select: {
+            user: true,
+            event: true,
+            project: true,
+          },
+        },
+      },
     })
 
     if (!startup) {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { getToken } from "next-auth/jwt"
+import { hash } from "bcryptjs"
 import type { NextRequest } from "next/server"
+
 import { authOptions } from "../../../../lib/auth"
 import { prisma } from "../../../../lib/db"
 import { generateInsight } from "../../../../lib/huggingface"
@@ -70,11 +72,12 @@ export async function POST(req: NextRequest) {
 
     // Create a temporary user if not authenticated
     if (!userId) {
+      const tempPassword = await hash("temp_password", 10)
       const tempUser = await prisma.user.create({
         data: {
           email: `temp_${Date.now()}@example.com`,
           name: "Guest User",
-          password: "temp_password", // This will be hashed by Prisma
+          password: tempPassword,
           role: "REGULAR_USER",
           id: `temp_${Date.now()}`,
           updatedAt: new Date(),

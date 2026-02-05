@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import crypto from "crypto"
-import { authOptions } from "../../../../lib/auth"
+import { hash } from "bcryptjs"
+
+import { authOptions, UserRole } from "../../../../lib/auth"
 import { prisma } from "../../../../lib/db"
-import { UserRole } from "../../../../lib/auth"
 import { sendInviteEmail } from "../../../../lib/email"
 
 export async function POST(req: Request) {
@@ -35,13 +36,14 @@ export async function POST(req: Request) {
     }
     // Generate a random password (should be sent to the user)
     const generatedPassword = crypto.randomBytes(8).toString("base64")
+    const hashedPassword = await hash(generatedPassword, 10)
     // Create user
     const user = await prisma.user.create({
       data: {
         id: crypto.randomUUID(),
         name: name || email.split("@")[0],
         email,
-        password: generatedPassword, // In production, hash this and send via email
+        password: hashedPassword,
         role: finalRole,
         startupId: finalStartupId,
         invitedById: session.user.id,
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
       console.error("Failed to send invite email:", emailErr)
       return NextResponse.json({ error: "User created, but failed to send email: " + (emailErr?.message || emailErr) }, { status: 500 })
     }
-    return NextResponse.json({ success: true, user })
+    return NextResponse.json({ success: true, user, tempPassword: generatedPassword })
   } catch (error) {
     console.error("Invitation error:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })

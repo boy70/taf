@@ -1,12 +1,11 @@
 import { getServerSession } from "next-auth/next"
 import Link from "next/link"
-
+import EmployeeLayout from "../../../components/layout/employee-layout"
 import { authOptions } from "../../../lib/auth"
 import { prisma } from "../../../lib/db"
-import { DashboardLayout } from "../../../components/layout/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "../../../components/ui/card"
 import { Button } from "../../../components/ui/button"
-import { UserRole } from "../../../lib/auth"
+import { UserRole } from "../../../types/user"
 
 export default async function EmployeeDashboardPage() {
   const session = await getServerSession(authOptions)
@@ -36,7 +35,7 @@ export default async function EmployeeDashboardPage() {
   }
 
   return (
-    <DashboardLayout role={session.user.role}>
+    <EmployeeLayout>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <div>
@@ -120,6 +119,6 @@ export default async function EmployeeDashboardPage() {
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </EmployeeLayout>
   )
 }

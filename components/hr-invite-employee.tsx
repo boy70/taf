@@ -8,6 +8,7 @@ export function HRInviteEmployee() {
   const [inviteLoading, setInviteLoading] = useState(false)
   const [inviteError, setInviteError] = useState("")
   const [inviteSuccess, setInviteSuccess] = useState("")
+  const [tempPassword, setTempPassword] = useState<string | null>(null)
 
   return (
     <>
@@ -25,6 +26,7 @@ export function HRInviteEmployee() {
                 setInviteLoading(true)
                 setInviteError("")
                 setInviteSuccess("")
+                setTempPassword(null)
                 try {
                   const res = await fetch("/api/users/invite", {
                     method: "POST",
@@ -33,7 +35,8 @@ export function HRInviteEmployee() {
                   })
                   const data = await res.json()
                   if (!res.ok) throw new Error(data.error || "Failed to invite employee")
-                  setInviteSuccess("Invitation sent! The employee will receive an email with their credentials.")
+                  setInviteSuccess("✅ Invitation sent! Account created for: " + inviteEmail)
+                  setTempPassword(data.tempPassword)
                   setInviteEmail("")
                 } catch (err: any) {
                   setInviteError(err.message || "Failed to invite employee")
@@ -52,8 +55,20 @@ export function HRInviteEmployee() {
                 required
                 disabled={inviteLoading}
               />
-              {inviteError && <div className="text-red-500 text-sm">{inviteError}</div>}
-              {inviteSuccess && <div className="text-green-600 text-sm">{inviteSuccess}</div>}
+              {inviteError && <div className="text-red-500 text-sm font-medium">{inviteError}</div>}
+              {inviteSuccess && (
+                <div className="bg-green-50 border border-green-200 rounded p-3 text-sm">
+                  <div className="text-green-700 font-medium mb-2">{inviteSuccess}</div>
+                  {tempPassword && (
+                    <div className="bg-white rounded p-2 border border-green-100">
+                      <p className="text-gray-600 text-xs mb-1">Temporary Credentials:</p>
+                      <p className="text-gray-900 font-mono text-sm mb-1"><strong>Email:</strong> {inviteEmail || 'employee@email.com'}</p>
+                      <p className="text-gray-900 font-mono text-sm mb-2"><strong>Password:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{tempPassword}</code></p>
+                      <p className="text-gray-600 text-xs italic">⚠️ In development mode, share these credentials with the employee. In production, they'll receive them via email.</p>
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="flex gap-2 justify-end">
                 <Button type="button" variant="outline" onClick={() => setShowInvite(false)} disabled={inviteLoading}>Cancel</Button>
                 <Button type="submit" disabled={inviteLoading || !inviteEmail}>{inviteLoading ? "Inviting..." : "Send Invite"}</Button>

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "../components/ui/button"
 import { Card } from "../components/ui/card"
-import { ArrowRight, Sparkles, Brain, Zap, Heart, CheckCircle, Users, TrendingUp } from "lucide-react"
+import { ArrowRight, Sparkles, Brain, Zap, Heart, CheckCircle, Users, TrendingUp, Building2 } from "lucide-react"
 import { UserNav } from "components/user-nav"
 
 // Predefined blob positions and sizes
@@ -74,7 +74,7 @@ export default function Home() {
               initial={{ rotate: -10, scale: 0.8 }}
               animate={{ rotate: 0, scale: 1 }}
               transition={{ duration: 0.6, type: "spring" }}
-              className="w-10 h-10 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 to-blue-500 rounded-lg flex items-center justify-center shadow-md"
+              className="w-10 h-10 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-lg flex items-center justify-center shadow-md"
             >
               <span className="font-bold text-white text-lg">T</span>
             </motion.div>
@@ -92,6 +92,16 @@ export default function Home() {
             <Link href="/about">
               <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
                 About
+              </Button>
+            </Link>
+            <Link href="/organizations">
+              <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+                Organizations
+              </Button>
+            </Link>
+            <Link href="/events">
+              <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+                Events
               </Button>
             </Link>
             <Link href="/colors">
@@ -155,7 +165,7 @@ export default function Home() {
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
                     Discover Your True{" "}
-                    <span className="bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 to-blue-500 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 bg-clip-text text-transparent">
                       Personality Colors
                     </span>
                   </motion.h1>
@@ -355,6 +365,163 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
+        {/* Features Section */}
+        <section className="py-20 md:py-28 bg-gradient-to-b from-slate-50 to-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-3xl md:text-5xl font-bold text-gray-900 mb-6"
+              >
+                Powerful Features for Modern Teams
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
+              >
+                From DISC assessments to organization profiles and event management
+              </motion.p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="group"
+                >
+                  <Card className="h-full p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 text-white mb-6 group-hover:scale-110 transition-transform">
+                      <feature.icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Organizations & Events Section */}
+        <section className="py-20 md:py-28 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="space-y-6"
+              >
+                <div className="inline-flex items-center space-x-2 bg-green-50 px-4 py-2 rounded-full border border-green-200">
+                  <Users className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">Organizations & Events</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                  Build Your Organization Profile
+                </h2>
+                <p className="text-lg text-gray-600">
+                  Create a professional presence with your organization profile. Showcase events, training programs, and connect with talented professionals.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    "Professional organization profiles",
+                    "Event and training management",
+                    "Organization directory and discovery",
+                    "Event registration system",
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center space-x-3">
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex gap-4 pt-4">
+                  <Link href="/organizations">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white">
+                      Explore Organizations
+                    </Button>
+                  </Link>
+                  <Link href="/events">
+                    <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                      View Events
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl opacity-50" />
+                <Card className="relative z-10 p-8 border-0 shadow-xl">
+                  <div className="space-y-4">
+                    <div className="h-40 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg opacity-80" />
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-gray-300 rounded-lg" />
+                      <div className="flex-1">
+                        <div className="h-2 bg-gray-300 rounded w-32 mb-2" />
+                        <div className="h-2 bg-gray-200 rounded w-24" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-2 bg-gray-200 rounded w-full" />
+                      <div className="h-2 bg-gray-200 rounded w-5/6" />
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 md:py-28 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
+          </div>
+
+          <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white space-y-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">Ready to Transform Your Team?</h2>
+              <p className="text-lg md:text-xl opacity-90 mb-8">
+                Join thousands of organizations using Tafsula to build stronger, more compatible teams
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/test">
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100">
+                    <span>Take the Assessment</span>
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/organizations">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white/20">
+                    <span>Explore Organizations</span>
+                    <Users className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
@@ -363,7 +530,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 to-blue-500 rounded-lg"></div>
+                <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-lg"></div>
                 <span className="text-white text-lg font-semibold">Tafsula</span>
               </div>
               <p className="text-gray-400 leading-relaxed">

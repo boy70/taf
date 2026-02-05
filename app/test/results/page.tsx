@@ -605,7 +605,7 @@ You are proof that in a world of quick fixes and superficial solutions, there is
         <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 to-blue-500 rounded-full"></div>
+              <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-full"></div>
               <span className="font-semibold text-gray-900">Personality Discovery</span>
             </div>
             <UserNav />
@@ -668,7 +668,7 @@ You are proof that in a world of quick fixes and superficial solutions, there is
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 to-blue-500 rounded-full"></div>
+            <div className="w-8 h-8 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500 rounded-full"></div>
             <span className="font-semibold text-gray-900">Your Personality Story</span>
           </div>
           <UserNav />
