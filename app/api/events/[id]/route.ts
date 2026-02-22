@@ -144,13 +144,33 @@ export async function PATCH(
     }
 
     const body = await req.json()
+    
+    // Whitelist updatable fields only
+    const allowedFields = [
+      'title', 'description', 'type', 'format', 'price', 'currency',
+      'visibility', 'isApprovalRequired', 'maxParticipants', 'status',
+      'startAt', 'endAt', 'location', 'venue', 'qrCodeUrl', 'qrCodeData',
+      'posterUrl', 'galleryImagesJson', 'summary', 'skillsJson', 'tags', 'category'
+    ]
+    
+    const updateData: any = {}
+    allowedFields.forEach(field => {
+      if (field in body) {
+        updateData[field] = body[field]
+      }
+    })
+    
+    // Handle date conversions
+    if (body.startAt) {
+      updateData.startAt = new Date(body.startAt)
+    }
+    if (body.endAt) {
+      updateData.endAt = new Date(body.endAt)
+    }
+    
     const updatedEvent = await prisma.event.update({
       where: { id: eventId },
-      data: {
-        ...body,
-        startAt: body.startAt ? new Date(body.startAt) : undefined,
-        endAt: body.endAt ? new Date(body.endAt) : undefined,
-      },
+      data: updateData,
       include: {
         createdBy: {
           select: { id: true, name: true, email: true },

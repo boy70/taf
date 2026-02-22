@@ -74,6 +74,11 @@ model startup {
   posts       organizationPost[]
   eventStats  userEventStats[]
   memberCredits memberCredit[] @relation("MemberCredits")
+  
+  // NEW: Collaboration
+  collaborationCode       organizationCollaborationCode?
+  collaborationRequests   collaborationRequest[] @relation("CollaborationRequester")
+  collaborationTargets    collaborationRequest[] @relation("CollaborationTarget")
 }
 
 model user {
@@ -837,4 +842,40 @@ model teamDirector {
   @@unique([teamId, userId])
   @@index([teamId])
   @@index([userId])
+}
+
+// NEW: Organization Collaboration Code & Requests
+model organizationCollaborationCode {
+  id        String   @id @default(cuid())
+  startupId String   @unique
+  code      String   @unique // Unique 8-12 character code (e.g., ORG-ABC123XYZ)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+
+  @@index([startupId])
+}
+
+model collaborationRequest {
+  id                String   @id @default(cuid())
+  requesterStartupId String  // The organization sending the request
+  targetStartupId   String   // The organization receiving the request (identified by their code)
+  
+  status            String   @default("PENDING") // PENDING, ACCEPTED, REJECTED, CANCELLED
+  message           String?  @db.Text
+  
+  respondedAt       DateTime?
+  responseMessage   String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  requesterStartup  startup  @relation("CollaborationRequester", fields: [requesterStartupId], references: [id], onDelete: Cascade)
+  targetStartup     startup  @relation("CollaborationTarget", fields: [targetStartupId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterStartupId, targetStartupId])
+  @@index([requesterStartupId])
+  @@index([targetStartupId])
+  @@index([status])
 }

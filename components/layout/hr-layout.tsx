@@ -14,6 +14,7 @@ import {
   X,
   Briefcase,
   ChevronRight,
+  Link as LinkIcon,
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 import { Button } from "../ui/button"
@@ -63,6 +64,12 @@ export function HRLayout({ children, organizationName = "Organization" }: HRLayo
       href: "/dashboard/hr/events",
       icon: Briefcase,
       description: "Event management",
+    },
+    {
+      label: "Collaborators",
+      href: "/dashboard/hr/collaborators",
+      icon: LinkIcon,
+      description: "Manage collaborations",
     },
   ]
 

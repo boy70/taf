@@ -1,128 +1,125 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-    './styles/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  safelist: [
-    // Dynamic color classes used in getTypeColor functions
-    'bg-red-100', 'text-red-800', 'border-red-300',
-    'bg-yellow-100', 'text-yellow-800', 'border-yellow-300',
-    'bg-green-100', 'text-green-800', 'border-green-300',
-    'bg-blue-100', 'text-blue-800', 'border-blue-300',
-    'bg-gray-100', 'text-gray-800', 'border-gray-300',
-    // Additional dynamic classes that might be used
-    'bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500',
-    'bg-red-600', 'bg-yellow-600', 'bg-green-600', 'bg-blue-600',
-    'text-red-500', 'text-yellow-500', 'text-green-500', 'text-blue-500',
-    'text-red-600', 'text-yellow-600', 'text-green-600', 'text-blue-600',
-    'text-red-700', 'text-yellow-700', 'text-green-700', 'text-blue-700',
-    'text-red-800', 'text-yellow-800', 'text-green-800', 'text-blue-800',
-    // Border classes
-    'border-red-200', 'border-yellow-200', 'border-green-200', 'border-blue-200',
-    'border-red-300', 'border-yellow-300', 'border-green-300', 'border-blue-300',
+    './app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))'
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))'
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))'
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))'
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))'
         },
-        chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))'
-        },
-        sidebar: {
-          background: 'hsl(var(--sidebar-background))',
-          foreground: 'hsl(var(--sidebar-foreground))',
-          primary: 'hsl(var(--sidebar-primary))',
-          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-          accent: 'hsl(var(--sidebar-accent))',
-          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-          border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))'
-        },
-        neutral: {
-          200: 'hsl(0 0% 89.8%)',
-          300: 'hsl(0 0% 83.1%)',
-          400: 'hsl(0 0% 64.9%)',
-          500: 'hsl(0 0% 45.1%)',
-          600: 'hsl(0 0% 32.9%)',
-          700: 'hsl(0 0% 25.1%)',
-          800: 'hsl(0 0% 14.9%)',
-          900: 'hsl(0 0% 9%)',
-          950: 'hsl(0 0% 3.9%)',
-        }
+        'disc-dominant': 'hsl(var(--disc-dominant))',
+        'disc-influencer': 'hsl(var(--disc-influencer))',
+        'disc-steady': 'hsl(var(--disc-steady))',
+        'disc-conscientious': 'hsl(var(--disc-conscientious))'
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      fontFamily: {
-        sans: ['var(--font-sans)'],
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)'
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' }
         },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' }
         },
+        'gradient': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' }
+        },
+        'pulse-soft': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.5' }
+        }
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'gradient': 'gradient 8s ease infinite',
+        'pulse-soft': 'pulse-soft 3s ease-in-out infinite'
       },
-    },
+      backgroundImage: {
+        'gradient-purple': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'gradient-blue': 'linear-gradient(135deg, #667eea 0%, #4299e1 100%)',
+        'gradient-emerald': 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        'gradient-rose': 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)',
+        'gradient-cyan': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+      },
+      boxShadow: {
+        'soft': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'glow': '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+        'glow-purple': '0 20px 25px -5px rgba(139, 92, 246, 0.3)'
+      },
+      spacing: {
+        '128': '32rem',
+        '144': '36rem'
+      },
+      maxWidth: {
+        'xs': '20rem',
+        'sm': '24rem',
+        'md': '28rem',
+        'lg': '32rem',
+        'xl': '36rem',
+        '2xl': '42rem',
+        '3xl': '48rem',
+        '4xl': '56rem',
+        '5xl': '64rem',
+        '6xl': '72rem'
+      },
+      backdropBlur: {
+        'xs': '2px'
+      },
+      opacity: {
+        '5': '0.05',
+        '10': '0.1',
+        '15': '0.15',
+        '35': '0.35',
+        '65': '0.65',
+        '80': '0.8',
+        '90': '0.9',
+        '95': '0.95'
+      }
+    }
   },
-  plugins: [require("tailwindcss-animate")],
-};
+  plugins: [require('tailwindcss-animate')]
+}
 
-export default config;
+export default config
+
